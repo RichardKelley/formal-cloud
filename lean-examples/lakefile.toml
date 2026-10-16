@@ -1,0 +1,6 @@
+name = "lean-examples"
+version = "0.1.0"
+defaultTargets = ["OddEven"]
+
+[[lean_lib]]
+name = "OddEven"

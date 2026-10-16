@@ -1,0 +1,10 @@
+<Project>
+  <ProjectName>Quota</ProjectName>
+  <InputFiles>
+    <PFile>./Common.p</PFile>
+    <PFile>./NonAtomic.p</PFile>
+    <PFile>./Atomic.p</PFile>
+    <PFile>./Tests.p</PFile>
+  </InputFiles>
+  <OutputDir>./PGenerated/</OutputDir>
+</Project>

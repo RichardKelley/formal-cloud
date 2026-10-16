@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+# Build adapter for this project's generated Java only. P 3.1.0 invokes Maven
+# with versions:use-latest-versions; instead use the checksum-pinned bundled
+# PEx runtime and JDK tools. No Maven installation or online restore is needed.
+[[ -f QuotaPModel.java ]] || { echo 'Expected generated QuotaPModel.java' >&2; exit 1; }
+classes=$(mktemp -d)
+trap 'rm -rf "$classes"' EXIT
+# P 3.1.0 emits this unused wildcard import, but the released runtime has
+# classes only in pex.utils subpackages. Drop the import, not model code.
+sed '/^import pex\.utils\.\*;$/d' QuotaPModel.java > "$classes/QuotaPModel.java"
+javac --release 17 -proc:none -cp "$QUOTA_PEX_JAR:$QUOTA_LOMBOK_JAR" \
+  -d "$classes" "$classes/QuotaPModel.java"
+mkdir -p target
+cp "$QUOTA_PEX_JAR" target/Quota-jar-with-dependencies.jar
+jar --update --file target/Quota-jar-with-dependencies.jar -C "$classes" pex
